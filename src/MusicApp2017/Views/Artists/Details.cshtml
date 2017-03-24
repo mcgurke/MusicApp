@@ -1,0 +1,13 @@
+﻿<h2>@*@Model.Name*@ Albums</h2>
+
+
+@if(Model != null){
+    @foreach (var item in Model)
+    {
+        <ul>
+            <li>@item.Title</li>
+        </ul>
+    }
+}else{ 
+    <p>None</p>
+}

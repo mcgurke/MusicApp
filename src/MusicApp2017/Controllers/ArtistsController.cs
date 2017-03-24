@@ -9,28 +9,28 @@ using System.Linq;
 
 namespace MusicApp2017.Controllers
 {
-    public class GenresController : Controller
+    public class ArtistsController : Controller
     {
         private MusicDbContext _context;
 
-        public GenresController(MusicDbContext context)
+        public ArtistsController(MusicDbContext context)
         {
             _context = context;
         }
 
         public IActionResult Index()
         {
-            var musicDbContext = _context.Genres;
+            var musicDbContext = _context.Artists;
             return View(musicDbContext.ToList());
         }
 
         public IActionResult Details(int? id)
         {
-            if (id == null)
+            if(id == null)
             {
                 return RedirectToAction("Index");
             }
-            var musicDbContext = _context.Albums;
+            var musicDbContext = _context.Albums.Include(m => m.Artist);
             return View(musicDbContext.ToList());
         }
 
@@ -40,16 +40,16 @@ namespace MusicApp2017.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([Bind("GenreID,Name")] Genre genre)
+        public IActionResult Create([Bind("ArtistID,Name")] Artist artist)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(genre);
+                _context.Add(artist);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewData["Name"] = genre.Name;
-            return View(genre);
+            ViewData["Name"] = artist.Name;
+            return View(artist);
         }
 
         public IActionResult Edit(int? id)
@@ -58,14 +58,14 @@ namespace MusicApp2017.Controllers
             {
                 return NotFound();
             }
-            var genre = _context.Genres.SingleOrDefault(m => m.GenreID == id);
-            if (genre == null)
+            var artist = _context.Artists.SingleOrDefault(m => m.ArtistID == id);
+            if (artist == null)
             {
                 return NotFound();
             }
             //ViewData["AlbumID"] = new SelectList(_context.Albums, "AlbumID", "Name", genre.Albums);
 
-            return View(genre);
+            return View(artist);
         }
     }
 }

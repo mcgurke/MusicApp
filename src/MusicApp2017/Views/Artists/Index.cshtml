@@ -1,0 +1,7 @@
+﻿<h2>Artists</h2>
+
+<a asp-action="Create" asp-controller="Artists">Create new Artist</a> <br />
+
+@foreach (var item in Model) {
+    <a asp-action="Details" asp-controller="Artists" asp-route-id="@item.ArtistID"> @item.Name </a> <br />
+}

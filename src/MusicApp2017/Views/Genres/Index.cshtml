@@ -1,7 +1,7 @@
 ﻿<h2>Genres</h2>
 
-<a asp-action="Create" asp-controller="Genres">Create new Genre</a>
+<a asp-action="Create" asp-controller="Genres">Create new Genre</a> <br />
 
 @foreach (var item in Model) {
-    <a asp-action="Details" asp-controller="Genres" asp-route-id="@item.GenreID"> @item.Genre.Name </a> <br />
+    <a asp-action="Details" asp-controller="Genres" asp-route-id="@item.GenreID"> @item.Name </a> <br />
 }
