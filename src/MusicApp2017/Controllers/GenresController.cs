@@ -44,7 +44,11 @@ namespace MusicApp2017.Controllers
         [HttpPost]
         public IActionResult Create([Bind("GenreID,Name")] Genre genre)
         {
-            if (ModelState.IsValid)
+            if (_context.Genres.SingleOrDefault(m => (m.Name == genre.Name && m.GenreID != genre.GenreID)) != null)
+            {
+                ViewData["Error"] = "Genre Name must be unique.";
+            }
+            else if (ModelState.IsValid)
             {
                 _context.Add(genre);
                 _context.SaveChanges();
@@ -72,18 +76,25 @@ namespace MusicApp2017.Controllers
         [HttpPost]
         public IActionResult Edit(int id, [Bind("GenreID, Name")] Genre genre)
         {
-            if (id != genre.GenreID)
+            if (_context.Genres.SingleOrDefault(m => (m.Name == genre.Name && m.GenreID != genre.GenreID)) != null)
             {
-                return NotFound();
+                ViewData["Error"] = "Genre Name must be unique.";
             }
+            else
+            {
+                if (id != genre.GenreID)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                   _context.Update(genre);
-                   _context.SaveChanges();
-                
-                return RedirectToAction("Index");
-            }
+                if (ModelState.IsValid)
+                {
+                    _context.Update(genre);
+                    _context.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
+            }  
             return View(genre);
         }
 

@@ -26,7 +26,7 @@ namespace MusicApp2017.Controllers
 
         public IActionResult Details(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return RedirectToAction("Index");
             }
@@ -46,7 +46,11 @@ namespace MusicApp2017.Controllers
         [HttpPost]
         public IActionResult Create([Bind("ArtistID, Name, Bio")] Artist artist)
         {
-            if (ModelState.IsValid)
+            if(_context.Artists.SingleOrDefault(m => (m.Name == artist.Name && m.ArtistID != artist.ArtistID)) != null)
+            {
+                ViewData["Error"] = "Artist Name must be unique.";
+            }
+            else if (ModelState.IsValid)
             {
                 _context.Add(artist);
                 _context.SaveChanges();
@@ -74,17 +78,24 @@ namespace MusicApp2017.Controllers
         [HttpPost]
         public IActionResult Edit(int id, [Bind("ArtistID, Name, Bio")] Artist artist)
         {
-            if (id != artist.ArtistID)
+            if (_context.Artists.SingleOrDefault(m => (m.Name == artist.Name && m.ArtistID != artist.ArtistID)) != null)
             {
-                return NotFound();
+                ViewData["Error"] = "Artist Name must be unique.";
             }
-
-            if (ModelState.IsValid)
+            else
             {
-                _context.Update(artist);
-                _context.SaveChanges();
+                if (id != artist.ArtistID)
+                {
+                    return NotFound();
+                }
 
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    _context.Update(artist);
+                    _context.SaveChanges();
+
+                    return RedirectToAction("Index");
+                }
             }
             return View(artist);
         }

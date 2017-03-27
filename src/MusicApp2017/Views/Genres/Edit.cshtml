@@ -5,6 +5,7 @@
     <label asp-for="Name"></label>
     <input asp-for="Name"  /><br />
     <span asp-validation-for="Name" class="text-danger"></span>
+    <span class="alert-danger">@ViewData["Error"]</span> <br />
     <input type="submit" value="Save" class="btn btn-default" />
 </form>
 <a asp-action="Index">Return to Genre List</a>
