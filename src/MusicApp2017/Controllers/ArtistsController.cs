@@ -46,7 +46,7 @@ namespace MusicApp2017.Controllers
         [HttpPost]
         public IActionResult Create([Bind("ArtistID, Name, Bio")] Artist artist)
         {
-            if(_context.Artists.SingleOrDefault(m => (m.Name == artist.Name && m.ArtistID != artist.ArtistID)) != null)
+            if (_context.Artists.SingleOrDefault(m => (m.Name == artist.Name && m.ArtistID != artist.ArtistID)) != null)
             {
                 ViewData["Error"] = "Artist Name must be unique.";
             }
