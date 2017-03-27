@@ -30,6 +30,10 @@ namespace MusicApp2017.Controllers
             {
                 return RedirectToAction("Index");
             }
+            Artist artist = _context.Artists.SingleOrDefault(m => m.ArtistID == id);
+            ViewData["ID"] = id;
+            ViewData["Name"] = artist.Name;
+            ViewData["Bio"] = artist.Bio;
             var musicDbContext = _context.Albums.Include(m => m.Artist);
             return View(musicDbContext.ToList());
         }
@@ -40,7 +44,7 @@ namespace MusicApp2017.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([Bind("ArtistID,Name")] Artist artist)
+        public IActionResult Create([Bind("ArtistID, Name, Bio")] Artist artist)
         {
             if (ModelState.IsValid)
             {
@@ -63,8 +67,25 @@ namespace MusicApp2017.Controllers
             {
                 return NotFound();
             }
-            //ViewData["AlbumID"] = new SelectList(_context.Albums, "AlbumID", "Name", genre.Albums);
 
+            return View(artist);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(int id, [Bind("ArtistID, Name, Bio")] Artist artist)
+        {
+            if (id != artist.ArtistID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.Update(artist);
+                _context.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
             return View(artist);
         }
     }

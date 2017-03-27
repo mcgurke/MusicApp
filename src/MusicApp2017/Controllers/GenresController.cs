@@ -30,7 +30,9 @@ namespace MusicApp2017.Controllers
             {
                 return RedirectToAction("Index");
             }
-            var musicDbContext = _context.Albums;
+            ViewData["GenreID"] = id;
+            ViewData["GenreName"] = (_context.Genres.SingleOrDefault(m => m.GenreID == id)).Name;
+            var musicDbContext = _context.Albums.Include(a => a.Artist).Include(a => a.Genre);
             return View(musicDbContext.ToList());
         }
 
@@ -63,10 +65,28 @@ namespace MusicApp2017.Controllers
             {
                 return NotFound();
             }
-            //ViewData["AlbumID"] = new SelectList(_context.Albums, "AlbumID", "Name", genre.Albums);
 
             return View(genre);
         }
+
+        [HttpPost]
+        public IActionResult Edit(int id, [Bind("GenreID, Name")] Genre genre)
+        {
+            if (id != genre.GenreID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                   _context.Update(genre);
+                   _context.SaveChanges();
+                
+                return RedirectToAction("Index");
+            }
+            return View(genre);
+        }
+
     }
 }
 
