@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MusicApp2017.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MusicApp2017.Controllers
 {
+    [Authorize]
     public class AlbumsController : Controller
     {
         private readonly MusicDbContext _context;
@@ -19,6 +21,7 @@ namespace MusicApp2017.Controllers
         }
 
         // GET: Albums
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var musicDbContext = _context.Albums.Include(a => a.Artist).Include(a => a.Genre);
@@ -26,6 +29,7 @@ namespace MusicApp2017.Controllers
         }
 
         // GET: Albums/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

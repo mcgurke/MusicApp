@@ -4,11 +4,13 @@ using MusicApp2017.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace MusicApp2017.Controllers
 {
+    [Authorize]
     public class ArtistsController : Controller
     {
         private MusicDbContext _context;
@@ -18,12 +20,14 @@ namespace MusicApp2017.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         public IActionResult Index()
         {
             var musicDbContext = _context.Artists;
             return View(musicDbContext.ToList());
         }
 
+        [AllowAnonymous]
         public IActionResult Details(int? id)
         {
             if (id == null)
